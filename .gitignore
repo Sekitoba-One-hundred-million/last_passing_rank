@@ -1,0 +1,9 @@
+/*.txt
+/log/
+/__pycache__/
+/machine_learn/__pycache__/
+/machine_learn_torch/__pycache__/
+/data_analyze/__pycache__/
+/simulation/__pycache__/
+/rank_learn/__pycache__/
+/genetic_algorithm/__pycache__/
