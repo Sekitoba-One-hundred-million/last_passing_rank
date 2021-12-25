@@ -2,6 +2,7 @@
 /log/
 /__pycache__/
 /machine_learn/__pycache__/
+/tree_learn/__pycache__/
 /machine_learn_torch/__pycache__/
 /data_analyze/__pycache__/
 /simulation/__pycache__/

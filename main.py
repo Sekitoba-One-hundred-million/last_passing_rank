@@ -5,8 +5,9 @@ from argparse import ArgumentParser
 import sekitoba_data_manage as dm
 import sekitoba_library as lib
 from data_analyze import data_create
-from machine_learn_torch import learn
-from machine_learn_torch.nn import LastStrightNN
+#from machine_learn_torch import learn
+#from machine_learn_torch.nn import LastStrightNN
+from tree_learn import learn
 
 def model_data_create():
     result = {}
@@ -22,6 +23,20 @@ def model_data_create():
             data = simu_data[k][kk]["data"]
             predict_answer = model.forward( torch.tensor( np.array( [ data ], dtype = np.float32 ) ) ).detach().numpy()
             result[k][kk] = predict_answer[0][0]
+
+    dm.pickle_upload( "last_horce_body.pickle", result )
+
+def tree_model_data_create():
+    result = {}
+    model = dm.pickle_load( "last_horce_body_lightbgm_model.pickle" )
+    simu_data = dm.pickle_load( "last_horce_body_simu_data.pickle" )
+    
+    for k in simu_data.keys():
+        lib.dic_append( result, k, {} )
+        for kk in simu_data[k].keys():
+            data = simu_data[k][kk]["data"]
+            predict_answer = model.predict( np.array( [ data ] ) )
+            result[k][kk] = predict_answer[0]
 
     dm.pickle_upload( "last_horce_body.pickle", result )
 
@@ -41,11 +56,11 @@ def main():
     r_check = parser.parse_args().r
 
     if s_check:
-        model_data_create()
+        tree_model_data_create()
         return
     
     data, simu_data = data_create.main( update = u_check )
-    learn.main( data, GPU = g_check )
+    learn.main( data )
     #lib.log.write( "rank learn" )
     #rank_model = rank_learn.main( data, simu_data )
     
