@@ -2,11 +2,10 @@ import math
 from tqdm import tqdm
 from mpi4py import MPI
 
+from data_analyze.once_data import OnceData
 import sekitoba_library as lib
 import sekitoba_data_manage as dm
 import sekitoba_data_create as dc
-
-from data_analyze.once_data import OnceData
 
 def key_list_search( rank, size, key_list ):
     n = int( len( key_list ) / ( size - 1 ) )
@@ -29,9 +28,10 @@ def main( update = False ):
     
     if not update:
         if rank == 0:
-            result = dm.pickle_load( "last_horce_body_data.pickle" )
-            simu_data = dm.pickle_load( "last_horce_body_simu_data.pickle" )
-
+            result = dm.pickle_load( lib.name.data_name() )
+            simu_data = dm.pickle_load( lib.name.simu_name() )
+            update_check = False
+            
             if result == None:
                 update_check =  True
 
@@ -49,12 +49,16 @@ def main( update = False ):
 
     if rank == 0:
         result = {}
+        dm.dl.local_keep()
+        
+        for i in range( 1, size ):
+            comm.send( True, dest = i, tag = 1 )
+
         result["simu"] = {}
-        result["data"] = { "answer": [], "teacher": [], "query": [], "year": [] }
+        result["data"] = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [] }
         
         for i in range( 1, size ):
             file_name = comm.recv( source = i, tag = 2 )
-            print( file_name )
             instance = dm.pickle_load( file_name )
             dm.pickle_delete( file_name )
             result["simu"].update( instance["simu"] )
@@ -62,11 +66,12 @@ def main( update = False ):
             for k in instance["data"].keys():
                 result["data"][k].extend( instance["data"][k] )
 
-        dm.dn.write( "last_horce_body.txt" )
-        dm.pickle_upload( "last_horce_body_data.pickle", result["data"] )
-        dm.pickle_upload( "last_horce_body_simu_data.pickle", result["simu"] )        
+        dm.pickle_upload( lib.name.data_name(), result["data"] )
+        dm.pickle_upload( lib.name.simu_name(), result["simu"] )
     else:
+        ok = comm.recv( source = 0, tag = 1 )
         od = OnceData()
+        print( "start rank:{}".format( rank ) )
         key_list = key_list_search( rank, size, list( od.race_data.keys() ) )
 
         if rank == 1:
@@ -81,5 +86,8 @@ def main( update = False ):
         comm.send( file_name, dest = 0, tag = 2 )
         result = None
 
+        if rank == 1:
+            od.score_write()
+
     dm.dl.data_clear()
-    return result
+    return result    

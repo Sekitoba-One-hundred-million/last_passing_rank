@@ -1,71 +1,67 @@
-import torch
-import numpy as np
-from argparse import ArgumentParser
-from mpi4py import MPI
+def data_score_read():
+    result = []
+    f = open( "./common/rank_score_data.txt", "r" )
+    all_data = f.readlines()
 
-import sekitoba_data_manage as dm
-import sekitoba_library as lib
+    for i in range( 0, len( all_data ) ):
+        split_data = all_data[i].replace( "\n", "" ).split( " " )
 
-from data_analyze import data_create
-#from machine_learn_torch import learn
-#from machine_learn_torch.nn import LastStrightNN
-from tree_learn import learn
-
-def tree_model_data_create():
-    result = {}
-    model = dm.pickle_load( "last_horce_body_lightbgm_model.pickle" )
-    simu_data = dm.pickle_load( "last_horce_body_simu_data.pickle" )
-    
-    for k in simu_data.keys():
-        data = []
-        lib.dic_append( result, k, {} )
-        
-        for kk in simu_data[k].keys():
-            instance = {}
-            pah = max( model.predict( np.array( [ simu_data[k][kk]["data"] ] ) )[0], 0 )
-            pah = int( pah * 2 ) / 2
+        if len( split_data ) == 2:
+            result.append( i )
             
-            instance["predict"] = pah
-            instance["answer"] = simu_data[k][kk]["answer"]
-            instance["kk"] = kk
-            data.append( instance )
+    f.close()
+    result = sorted( result, reverse = True )
+    return result
 
-        sort_list = sorted( data, key=lambda x:x["predict"] )        
-        
-        for i in range( 0, len( sort_list ) ):
-            pah = sort_list[i]["predict"] - sort_list[0]["predict"]
-            kk = sort_list[i]["kk"]
-            result[k][kk] = max( pah, 0 )
+def data_remove( data: list, delete_data: list ):
+    for i in range( 0, len( delete_data ) ):
+        data.pop( delete_data[i] )
 
-    dm.pickle_upload( "last_horce_body.pickle", result )
+    return data
 
 def main():
-    #lib.log.set_name( "nn_simulation_3.log" )
-    #lib.log.set_name( "rank_learn_9.log" )
-    
+    from argparse import ArgumentParser
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from mpi4py import MPI
+    from tqdm import tqdm
+
+    import sekitoba_data_manage as dm
+    import sekitoba_library as lib
+    from data_analyze import data_create
+    from learn import learn
+
+    lib.name.set_name( "last_passing_rank" )
+
+    lib.log.set_write( False )
     parser = ArgumentParser()
-    parser.add_argument( "-g", type=bool, default = False, help = "optional" )
     parser.add_argument( "-u", type=bool, default = False, help = "optional" )
     parser.add_argument( "-s", type=bool, default = False, help = "optional" )
-    parser.add_argument( "-r", type=bool, default = False, help = "optional" )
+    parser.add_argument( "-l", type=bool, default = False, help = "optional" )
 
-    g_check = parser.parse_args().g
     u_check = parser.parse_args().u
     s_check = parser.parse_args().s
-    r_check = parser.parse_args().r
-
-    if s_check:
-        if rank == 0:
-            tree_model_data_create()            
-        return
-
+    l_check = parser.parse_args().l
     data = data_create.main( update = u_check )
 
-    if not data == None:        
-        learn.main( data["data"], data["simu"] )
-        tree_model_data_create()
+    if not data  == None:
+        simu_data = data["simu"]
+        learn_data = data["data"]
+        remove_list = data_score_read()
 
-    MPI.Finalize()
+        for k in simu_data.keys():
+            for kk in simu_data[k].keys():
+                simu_data[k][kk]["data"] = data_remove( simu_data[k][kk]["data"], remove_list )
+
+        for i in range( 0, len( learn_data["teacher"] ) ):
+            for r in range( 0, len( learn_data["teacher"][i] ) ):
+                learn_data["teacher"][i][r] = data_remove( learn_data["teacher"][i][r], remove_list )
+
+        learn.main( data["data"], simu_data )
+            
+    MPI.Finalize()        
     
 if __name__ == "__main__":
+    #from simulation import buy_simulation
+    #buy_simulation.main()
     main()

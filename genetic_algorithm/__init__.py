@@ -1,1 +1,0 @@
-from genetic_algorithm.genetic_algorithm import GA
