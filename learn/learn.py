@@ -107,7 +107,8 @@ def score_check( simu_data, model ):
         all_horce_num = len( simu_data[race_id] )
         
         for horce_id in simu_data[race_id].keys():
-            predict_score = max( min( int( model.predict( np.array( [ simu_data[race_id][horce_id]["data"] ] ) )[0] ), all_horce_num ), 1 )
+            predict_score = max( min( model.predict( np.array( [ simu_data[race_id][horce_id]["data"] ] ) )[0], all_horce_num ), 1 )
+            predict_score = int( predict_score + 0.5 )
             answer_rank = simu_data[race_id][horce_id]["answer"]["last_passing_rank"]
             check_data.append( { "horce_id": horce_id, "answer": answer_rank, "score": predict_score } )
 

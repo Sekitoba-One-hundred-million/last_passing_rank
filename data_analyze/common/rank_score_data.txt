@@ -35,6 +35,7 @@ past_max_horce_body
 past_ave_horce_body
 past_ave_horce_body_index
 past_std_horce_body
+predict_first_passing_rank
 place
 speed_index
 speed_index_index
