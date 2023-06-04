@@ -55,7 +55,7 @@ def main( update = False ):
             comm.send( True, dest = i, tag = 1 )
 
         result["simu"] = {}
-        result["data"] = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [] }
+        result["data"] = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [], "horce_body": [] }
         
         for i in range( 1, size ):
             file_name = comm.recv( source = i, tag = 2 )

@@ -83,9 +83,20 @@ def data_check( data ):
         else:
             result["query"].append( query )
 
+        n = int( query / 3 )
+        
         for r in range( 0, query ):
             current_data = data["teacher"][i][r]
-            current_answer = int( data["answer"][i][r] )
+            first_rank = int( data["answer"][i][r] )
+            current_answer = first_rank
+
+            if first_rank / n < 1:
+                current_answer -= 1
+            elif first_rank / n > 2:
+                current_answer += 1
+
+            if first_rank == 1:
+                current_answer -= 1
             
             if year in lib.test_years:
                 result["test_teacher"].append( current_data )
@@ -100,15 +111,24 @@ def score_check( simu_data, model ):
     score = 0
     count = 0
     simu_predict_data = {}
+    predict_use_data = []
+
+    for race_id in simu_data.keys():
+        for horce_id in simu_data[race_id].keys():
+            predict_use_data.append( simu_data[race_id][horce_id]["data"] )
+
+    c = 0
+    predict_data = model.predict( np.array( predict_use_data ) )
 
     for race_id in tqdm( simu_data.keys() ):
+        year = race_id[0:4]
         check_data = []
         simu_predict_data[race_id] = {}
         all_horce_num = len( simu_data[race_id] )
         
         for horce_id in simu_data[race_id].keys():
-            predict_score = max( min( model.predict( np.array( [ simu_data[race_id][horce_id]["data"] ] ) )[0], all_horce_num ), 1 )
-            predict_score = int( predict_score + 0.5 )
+            predict_score = min( predict_data[c], all_horce_num )
+            c += 1
             answer_rank = simu_data[race_id][horce_id]["answer"]["last_passing_rank"]
             check_data.append( { "horce_id": horce_id, "answer": answer_rank, "score": predict_score } )
 
@@ -119,8 +139,12 @@ def score_check( simu_data, model ):
         
         for i in range( 0, len( check_data ) ):
             predict_score = -1
-            current_score = check_data[i]["score"]
-            
+            current_score = int( check_data[i]["score"] + 0.5 )
+
+            if continue_count >= 3:
+                next_rank += continue_count
+                continue_count = 0
+
             if i == 0:
                 predict_score = 1
             elif before_score == current_score:
@@ -133,9 +157,12 @@ def score_check( simu_data, model ):
 
             check_answer = check_data[i]["answer"]
             before_score = current_score
+            #predict_score = int( check_data[i]["score"] + 0.5 )
             simu_predict_data[race_id][check_data[i]["horce_id"]] = predict_score
-            score += math.pow( predict_score - check_answer, 2 )
-            count += 1
+
+            if year in lib.test_years:
+                score += math.pow( predict_score - check_answer, 2 )
+                count += 1
             
     score /= count
     score = math.sqrt( score )
