@@ -1,10 +1,9 @@
 /*.txt
 /log/
-/__pycache__/
-/machine_learn/__pycache__/
-/tree_learn/__pycache__/
-/machine_learn_torch/__pycache__/
+/common/__pycache__/
+/learn/__pycache__/
+/learn/common/
 /data_analyze/__pycache__/
+/data_analyze/common/
 /simulation/__pycache__/
 /rank_learn/__pycache__/
-/genetic_algorithm/__pycache__/
