@@ -560,7 +560,6 @@ class OnceData:
             t_instance[data_name.trainer_true_skill] = trainer_true_skill
             t_instance[data_name.trainer_true_skill_index] = trainer_true_skill_index
             t_instance[data_name.horce_last_passing_true_skill] = horce_last_passing_true_skill
-            t_instance[data_name.horce_last_passing_true_skill_index] = horce_last_passing_true_skill_index
             t_instance[data_name.jockey_last_passing_true_skill] = jockey_last_passing_true_skill
             t_instance[data_name.limb] = limb_math
             t_instance[data_name.my_limb_count] = my_limb_count_score
