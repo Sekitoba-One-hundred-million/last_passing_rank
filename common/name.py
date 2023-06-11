@@ -7,6 +7,8 @@ class Name:
         self.ave_first_passing_rank = "ave_first_passing_rank"
         self.ave_first_last_diff = "ave_first_last_diff"
         self.predict_first_passing_rank = "predict_first_passing_rank"
+        self.predict_stand_first_passing_rank = "predict_stand_first_passing_rank"
+        self.predict_first_passing_rank_index = "predict_first_passing_rank_index"
         self.baba = "baba"
         self.before_continue_not_three_rank = "before_continue_not_three_rank"
         self.before_diff = "before_diff"

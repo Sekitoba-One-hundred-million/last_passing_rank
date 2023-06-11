@@ -33,38 +33,7 @@ def lg_main( data ):
     dm.pickle_upload( lib.name.model_name(), bst )
         
     return bst
-"""
-def lg_main( data, prod = False ):
-    max_pos = np.max( np.array( data["answer"] ) )
-    lgb_train = lgb.Dataset( np.array( data["teacher"] ), np.array( data["answer"] ), group = np.array( data["query"] ) )
-    lgb_vaild = lgb.Dataset( np.array( data["test_teacher"] ), np.array( data["test_answer"] ), group = np.array( data["test_query"] ) )
-    lgbm_params =  {
-        #'task': 'train',
-        'boosting_type': 'gbdt',
-        'objective': 'lambdarank',
-        'metric': 'ndcg',   # for lambdarank
-        'ndcg_eval_at': [1,2,3],  # for lambdarank
-        'label_gain': list(range(0, np.max( np.array( data["answer"], dtype = np.int32 ) ) + 1)),
-        'max_position': int( max_pos ),  # for lambdarank
-        'early_stopping_rounds': 30,
-        'learning_rate': 0.05,
-        'num_iteration': 300,
-        'min_data_in_bin': 1,
-        'max_depth': 200,
-        'num_leaves': 175,
-        'min_data_in_leaf': 25,
-    }
 
-    bst = lgb.train( params = lgbm_params,
-                     train_set = lgb_train,     
-                     valid_sets = [lgb_train, lgb_vaild ],
-                     verbose_eval = 10,
-                     num_boost_round = 5000 )
-    
-    dm.pickle_upload( lib.name.model_name(), bst )
-        
-    return bst
-"""
 def data_check( data ):
     result = {}
     result["teacher"] = []
@@ -95,7 +64,7 @@ def data_check( data ):
             elif first_rank / n > 2:
                 current_answer += 1
 
-            if first_rank == 1:
+            if first_rank == 1 or first_rank == 2:
                 current_answer -= 1
             
             if year in lib.test_years:
@@ -108,7 +77,8 @@ def data_check( data ):
     return result
 
 def score_check( simu_data, model ):
-    score = 0
+    score1 = 0
+    score2 = 0
     count = 0
     simu_predict_data = {}
     predict_use_data = []
@@ -123,6 +93,7 @@ def score_check( simu_data, model ):
     for race_id in tqdm( simu_data.keys() ):
         year = race_id[0:4]
         check_data = []
+        stand_data_list = []
         simu_predict_data[race_id] = {}
         all_horce_num = len( simu_data[race_id] )
         
@@ -131,7 +102,9 @@ def score_check( simu_data, model ):
             c += 1
             answer_rank = simu_data[race_id][horce_id]["answer"]["last_passing_rank"]
             check_data.append( { "horce_id": horce_id, "answer": answer_rank, "score": predict_score } )
+            stand_data_list.append( predict_score )
 
+        stand_data_list = lib.standardization( stand_data_list )
         check_data = sorted( check_data, key = lambda x: x["score"] )
         before_score = 1
         next_rank = 1
@@ -141,7 +114,7 @@ def score_check( simu_data, model ):
             predict_score = -1
             current_score = int( check_data[i]["score"] + 0.5 )
 
-            if continue_count >= 3:
+            if continue_count >= 2:
                 next_rank += continue_count
                 continue_count = 0
 
@@ -157,49 +130,24 @@ def score_check( simu_data, model ):
 
             check_answer = check_data[i]["answer"]
             before_score = current_score
-            #predict_score = int( check_data[i]["score"] + 0.5 )
-            #predict_score = int( predict_score / 2 )
-            simu_predict_data[race_id][check_data[i]["horce_id"]] = predict_score
+            simu_predict_data[race_id][check_data[i]["horce_id"]] = {}
+            simu_predict_data[race_id][check_data[i]["horce_id"]]["index"] = predict_score
+            simu_predict_data[race_id][check_data[i]["horce_id"]]["score"] = check_data[i]["score"]
+            simu_predict_data[race_id][check_data[i]["horce_id"]]["stand"] = stand_data_list[i]
 
             if year in lib.test_years:
-                #check_answer = int( check_answer / 2 )
-                score += math.pow( predict_score - check_answer, 2 )
+                score1 += math.pow( predict_score - check_answer, 2 )
+                score2 += math.pow( max( check_data[i]["score"], 1 ) - check_answer, 2 )
                 count += 1
             
-    score /= count
-    score = math.sqrt( score )
-    print( "score: {}".format( score ) )
-    dm.pickle_upload( "predict_last_passing_rank.pickle", simu_predict_data )
-    
-"""    
-def score_check( simu_data, model ):
-    score = 0
-    count = 0
-    simu_predict_data = {}
-    
-    for race_id in simu_data.keys():
-        predict_data = []
-        simu_predict_data[race_id] = {}
-        
-        for horce_id in simu_data[race_id].keys():
-            predict_score = model.predict( np.array( [ simu_data[race_id][horce_id]["data"] ] ) )[0]
-            first_passing_rank = simu_data[race_id][horce_id]["answer"]["first_passing_rank"]
-            predict_data.append( { "score": predict_score, "rank": first_passing_rank, "horce_id": horce_id } )
+    score1 /= count
+    score1 = math.sqrt( score1 )
+    score2 /= count
+    score2 = math.sqrt( score2 )
 
-        predict_data = sorted( predict_data, key = lambda x: x["score"] )
-        #print( predict_data )
-        for i in range( 0, len( predict_data ) ):
-            predict_rank = i + 1
-            horce_id = predict_data[i]["horce_id"]
-            score += math.pow( predict_rank - predict_data[i]["rank"], 2 )
-            count += 1
-            simu_predict_data[race_id][horce_id] = predict_rank
-
-    score /= count
-    score = math.sqrt( score )
-    print( "score: {}".format( score ) )
-    dm.pickle_upload( "predict_first_passing_rank.pickle", simu_predict_data )
-"""
+    print( "score1: {}".format( score1 ) )
+    print( "score2: {}".format( score2 ) )
+    dm.pickle_upload( "predict_last_passing_rank.pickle", simu_predict_data )    
 
 def importance_check( model ):
     result = []
