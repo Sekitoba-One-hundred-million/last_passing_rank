@@ -29,8 +29,7 @@ def main():
     import sekitoba_data_manage as dm
     import sekitoba_library as lib
     from data_analyze import data_create
-    from learn import learn
-
+    import learn
     lib.name.set_name( "last_passing_rank" )
 
     lib.log.set_write( False )
@@ -38,10 +37,12 @@ def main():
     parser.add_argument( "-u", type=bool, default = False, help = "optional" )
     parser.add_argument( "-s", type=bool, default = False, help = "optional" )
     parser.add_argument( "-l", type=bool, default = False, help = "optional" )
+    parser.add_argument( "-p", type=bool, default = False, help = "optional" )
 
     u_check = parser.parse_args().u
     s_check = parser.parse_args().s
     l_check = parser.parse_args().l
+    p_check = parser.parse_args().p
     data = data_create.main( update = u_check )
 
     if not data  == None:
@@ -57,7 +58,10 @@ def main():
             for r in range( 0, len( learn_data["teacher"][i] ) ):
                 learn_data["teacher"][i][r] = data_remove( learn_data["teacher"][i][r], remove_list )
 
-        learn.main( data["data"], simu_data )
+        if l_check:
+            learn.main( learn_data, simu_data, learn = ( l_check or u_check ) )
+        elif p_check:
+            learn.optuna_main( learn_data, simu_data )
             
     MPI.Finalize()        
     

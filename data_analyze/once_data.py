@@ -396,9 +396,15 @@ class OnceData:
             horce_num = int( cd.horce_number() )
 
             last_passing_rank = -1
+            first_passing_rank = -1
             
             try:
                 last_passing_rank = int( cd.passing_rank().split( "-" )[-1] )
+            except:
+                pass
+
+            try:
+                first_passing_rank = int( cd.passing_rank().split( "-" )[0] )
             except:
                 pass
 
@@ -649,12 +655,14 @@ class OnceData:
             self.simu_data[race_id][horce_id] = {}
             self.simu_data[race_id][horce_id]["data"] = t_list
             self.simu_data[race_id][horce_id]["answer"] = { "last_passing_rank": last_passing_rank,
+                                                           "first_passing_rank": first_passing_rank,
+                                                           "predict_first_passing_rank": predict_first_passing_rank,
                                                            "odds": cd.odds(),
                                                            "popular": cd.popular(),
                                                            "horce_num": cd.horce_number() }
 
             answer_horce_body.append( answer_corner_horce_body )
-            answer_data.append( last_passing_rank )
+            answer_data.append( last_passing_rank - first_passing_rank )
             teacher_data.append( t_list )
             #diff_data.append( cd.diff() )
 
