@@ -42,6 +42,7 @@ dm.dl.file_set( "omega_index_data.pickle" )
 dm.dl.file_set( "first_passing_true_skill_data.pickle" )
 dm.dl.file_set( "last_passing_true_skill_data.pickle" )
 dm.dl.file_set( "predict_first_passing_rank.pickle" )
+dm.dl.file_set( "first_up3_halon.pickle" )
 
 class OnceData:
     def __init__( self ):
@@ -65,6 +66,7 @@ class OnceData:
         self.first_passing_true_skill_data = dm.dl.data_get( "first_passing_true_skill_data.pickle" )
         self.last_passing_true_skill_data = dm.dl.data_get( "last_passing_true_skill_data.pickle" )
         self.predict_first_passing_rank = dm.dl.data_get( "predict_first_passing_rank.pickle" )
+        self.first_up3_halon = dm.dl.data_get( "first_up3_halon.pickle" )
         
         self.race_high_level = RaceHighLevel()
         self.race_type = RaceType()
@@ -179,6 +181,8 @@ class OnceData:
         current_race_data[data_name.past_max_horce_body] = []
         current_race_data[data_name.past_ave_horce_body] = []
         current_race_data[data_name.past_std_horce_body] = []
+        current_race_data[data_name.first_up3_halon_ave] = []
+        current_race_data[data_name.first_up3_halon_min] = []
         escape_limb1_count = 0
         escape_limb2_count = 0
         one_popular_limb = -1
@@ -298,6 +302,16 @@ class OnceData:
                 two_popular_limb = limb_math
                 two_popular_odds = odds
 
+            horce_num = int( cd.horce_number() )
+            first_up3_halon_ave = -1
+            first_up3_halon_min = -1
+
+            if race_id in self.first_up3_halon and \
+              horce_num in self.first_up3_halon[race_id] and \
+              not len( self.first_up3_halon[race_id][horce_num] ) == 0:
+                first_up3_halon_ave = sum( self.first_up3_halon[race_id][horce_num] ) / len( self.first_up3_halon[race_id][horce_num] )
+                first_up3_halon_min = min( self.first_up3_halon[race_id][horce_num] )
+
             current_year = cd.year()
             horce_birth_day = int( horce_id[0:4] )
             age = current_year - horce_birth_day
@@ -322,6 +336,8 @@ class OnceData:
             current_race_data[data_name.past_ave_horce_body].append( past_ave_horce_body )
             current_race_data[data_name.past_std_horce_body].append( past_std_horce_body )
             current_race_data[data_name.omega].append( omega )
+            current_race_data[data_name.first_up3_halon_ave].append( first_up3_halon_ave )
+            current_race_data[data_name.first_up3_halon_min].append( first_up3_halon_min )
 
         if len( current_race_data[data_name.burden_weight] ) == 0:
             return
@@ -380,6 +396,9 @@ class OnceData:
         ave_past_ave_horce_body = sum( current_race_data[data_name.past_ave_horce_body] ) / N
         ave_past_max_horce_body = sum( current_race_data[data_name.past_max_horce_body] ) / N
         ave_past_min_horce_body = sum( current_race_data[data_name.past_min_horce_body] ) / N
+
+        first_up3_halon_ave_stand = lib.standardization( current_race_data[data_name.first_up3_halon_ave] )
+        first_up3_halon_min_stand = lib.standardization( current_race_data[data_name.first_up3_halon_min] )
 
         for kk in self.race_data[k].keys():
             horce_id = kk
@@ -532,7 +551,6 @@ class OnceData:
             except:
                 before_first_passing_rank = 0
 
-            count += 1
             t_instance = {}
             t_instance[data_name.predict_first_passing_rank] = predict_first_passing_rank
             t_instance[data_name.predict_first_passing_rank_index] = predict_first_passing_rank_index
@@ -557,6 +575,12 @@ class OnceData:
             t_instance[data_name.escape_limb1_count] = escape_limb1_count
             t_instance[data_name.escape_limb2_count] = escape_limb2_count
             t_instance[data_name.escape_within_rank] = escape_within_rank
+            
+            t_instance[data_name.first_up3_halon_ave] = current_race_data[data_name.first_up3_halon_ave][count]
+            t_instance[data_name.first_up3_halon_ave_stand] = first_up3_halon_ave_stand[count]
+            t_instance[data_name.first_up3_halon_min] = current_race_data[data_name.first_up3_halon_min][count]
+            t_instance[data_name.first_up3_halon_min_stand] = first_up3_halon_min_stand[count]
+
             t_instance[data_name.horce_num] = cd.horce_number()
             t_instance[data_name.horce_sex] = horce_sex
             t_instance[data_name.horce_true_skill] = horce_true_skill
@@ -648,7 +672,8 @@ class OnceData:
             t_instance[data_name.popular_rank] = popular_rank
             t_instance[data_name.before_speed] = before_speed_score
             t_instance[data_name.before_popular] = before_popular
-            
+
+            count += 1
             t_list = self.data_list_create( t_instance )
 
             lib.dic_append( self.simu_data, race_id, {} )

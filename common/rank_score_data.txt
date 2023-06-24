@@ -25,6 +25,10 @@ dist_kind_count
 escape_limb1_count
 escape_limb2_count
 escape_within_rank
+first_up3_halon_ave
+first_up3_halon_min
+first_up3_halon_ave_stand
+first_up3_halon_min_stand
 horce_num
 horce_sex
 horce_true_skill

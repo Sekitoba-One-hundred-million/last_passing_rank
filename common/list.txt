@@ -33,6 +33,10 @@ escape_limb2_count
 escape_within_rank
 father_rank
 foot_used
+first_up3_halon_ave
+first_up3_halon_min
+first_up3_halon_ave_stand
+first_up3_halon_min_stand
 horce_blood_score
 horce_num
 horce_sex
