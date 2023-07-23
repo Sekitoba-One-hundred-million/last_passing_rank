@@ -8,16 +8,10 @@ from statistics import stdev
 import sekitoba_library as lib
 import sekitoba_data_manage as dm
 
-from sekitoba_data_create.time_index_get import TimeIndexGet
-#from sekitoba_data_create.up_score import UpScore
-from sekitoba_data_create.train_index_get import TrainIndexGet
-#from sekitoba_data_create.pace_time_score import PaceTimeScore
-from sekitoba_data_create.jockey_data_get import JockeyData
-from sekitoba_data_create.trainer_data_get import TrainerData
 from sekitoba_data_create.high_level_data_get import RaceHighLevel
-from sekitoba_data_create.race_type import RaceType
-from sekitoba_data_create.before_data import BeforeData
-#from sekitoba_data_create import parent_data_get
+from sekitoba_data_create.time_index_get import TimeIndexGet
+from sekitoba_data_create.trainer_data_get import TrainerData
+from sekitoba_data_create.jockey_data_get import JockeyData
 
 from common.name import Name
 
@@ -35,11 +29,8 @@ dm.dl.file_set( "race_jockey_id_data.pickle" )
 dm.dl.file_set( "race_trainer_id_data.pickle" )
 dm.dl.file_set( "true_skill_data.pickle" )
 dm.dl.file_set( "race_money_data.pickle" )
-dm.dl.file_set( "waku_three_rate_data.pickle" )
-dm.dl.file_set( "wrap_data.pickle" )
 dm.dl.file_set( "corner_horce_body.pickle" )
 dm.dl.file_set( "omega_index_data.pickle" )
-dm.dl.file_set( "first_passing_true_skill_data.pickle" )
 dm.dl.file_set( "last_passing_true_skill_data.pickle" )
 dm.dl.file_set( "predict_first_passing_rank.pickle" )
 dm.dl.file_set( "first_up3_halon.pickle" )
@@ -59,22 +50,15 @@ class OnceData:
         self.race_trainer_id_data = dm.dl.data_get( "race_trainer_id_data.pickle" )
         self.true_skill_data = dm.dl.data_get( "true_skill_data.pickle" )
         self.race_money_data = dm.dl.data_get( "race_money_data.pickle" )
-        self.waku_three_rate_data = dm.dl.data_get( "waku_three_rate_data.pickle" )
-        self.wrap_data = dm.dl.data_get( "wrap_data.pickle" )
         self.corner_horce_body = dm.dl.data_get( "corner_horce_body.pickle" )
-        #self.first_corner_rank = dm.dl.data_get( "first_corner_rank.pickle" )
-        self.first_passing_true_skill_data = dm.dl.data_get( "first_passing_true_skill_data.pickle" )
         self.last_passing_true_skill_data = dm.dl.data_get( "last_passing_true_skill_data.pickle" )
-        self.predict_first_passing_rank = dm.dl.data_get( "predict_first_passing_rank.pickle" )
         self.first_up3_halon = dm.dl.data_get( "first_up3_halon.pickle" )
+        self.predict_first_passing_rank = dm.dl.data_get( "predict_first_passing_rank.pickle" )
         
         self.race_high_level = RaceHighLevel()
-        self.race_type = RaceType()
         self.time_index = TimeIndexGet()
         self.trainer_data = TrainerData()
         self.jockey_data = JockeyData()
-        self.before_data = BeforeData()
-        self.train_index = TrainIndexGet()
 
         self.data_name_list = []
         self.write_data_list = []
@@ -410,10 +394,6 @@ class OnceData:
             if not cd.race_check():
                 continue
             
-            before_cd = pd.before_cd()
-            place_num = int( race_place_num )
-            horce_num = int( cd.horce_number() )
-
             last_passing_rank = -1
             first_passing_rank = -1
             
@@ -427,6 +407,9 @@ class OnceData:
             except:
                 pass
 
+            before_cd = pd.before_cd()
+            place_num = int( race_place_num )
+            horce_num = int( cd.horce_number() )
             key_horce_num = str( int( horce_num ) )
 
             if not key_horce_num in current_horce_body[max_corner_key]:
@@ -460,11 +443,8 @@ class OnceData:
                 popular_rank = abs( before_cd.rank() - before_cd.popular() )
                 before_first_last_diff = before_cd.first_last_diff()
 
-            key_horce_num = str( int( cd.horce_number() ) )
             before_year = int( year ) - 1
             key_before_year = str( int( before_year ) )
-            father_id = self.parent_id_data[horce_id]["father"]
-            mother_id = self.parent_id_data[horce_id]["mother"]
             predict_first_passing_rank = -1
             predict_stand_first_passing_rank = -1
             predict_first_passing_rank_index = -1
@@ -689,7 +669,6 @@ class OnceData:
             answer_horce_body.append( answer_corner_horce_body )
             answer_data.append( last_passing_rank - first_passing_rank )
             teacher_data.append( t_list )
-            #diff_data.append( cd.diff() )
 
         if not len( answer_data ) == 0:
             self.result["answer"].append( answer_data )
