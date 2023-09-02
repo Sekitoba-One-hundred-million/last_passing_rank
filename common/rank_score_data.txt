@@ -72,8 +72,6 @@ min_up_rate
 money
 my_limb_count
 odds
-omega
-omega_index
 one_popular_limb
 one_popular_odds
 one_rate
