@@ -22,20 +22,10 @@ def data_check( data ):
         else:
             result["query"].append( query )
 
-        n = int( query / 3 )
-
         for r in range( 0, query ):
             current_data = data["teacher"][i][r]
             last_rank = int( data["answer"][i][r] )
             current_answer = last_rank
-
-            #if last_rank / n < 1:
-            #    current_answer -= 1
-            #elif last_rank / n > 2:
-            #    current_answer += 1
-
-            #if last_rank == 1 or last_rank == 2:
-            #    current_answer -= 1
 
             if year in lib.test_years:
                 result["test_teacher"].append( current_data )
