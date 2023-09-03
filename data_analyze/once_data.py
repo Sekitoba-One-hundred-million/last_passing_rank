@@ -314,7 +314,7 @@ class OnceData:
             current_race_data[data_name.first_up3_halon_ave].append( first_up3_halon_ave )
             current_race_data[data_name.first_up3_halon_min].append( first_up3_halon_min )
 
-        if len( current_race_data[data_name.burden_weight] ) == 0:
+        if len( current_race_data[data_name.burden_weight] ) < 2:
             return
 
         sort_race_data: dict[ str, list ] = {}
