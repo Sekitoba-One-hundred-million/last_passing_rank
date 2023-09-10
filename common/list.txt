@@ -158,7 +158,7 @@ popular
 popular_rank
 predict_first_passing_rank
 predict_first_passing_rank_index
-predict_stand_first_passing_rank
+predict_first_passing_rank_stand
 race_interval
 race_level_check
 rank_score_odds

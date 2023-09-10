@@ -436,13 +436,13 @@ class OnceData:
             before_year = int( year ) - 1
             key_before_year = str( int( before_year ) )
             predict_first_passing_rank = -1
-            predict_stand_first_passing_rank = -1
+            predict_first_passing_rank_stand = -1
             predict_first_passing_rank_index = -1
             
             if race_id in self.predict_first_passing_rank and horce_id in self.predict_first_passing_rank[race_id]:
                 predict_first_passing_rank = self.predict_first_passing_rank[race_id][horce_id]["score"]
                 predict_first_passing_rank_index = self.predict_first_passing_rank[race_id][horce_id]["index"]
-                predict_stand_first_passing_rank = self.predict_first_passing_rank[race_id][horce_id]["stand"]
+                predict_first_passing_rank_stand = self.predict_first_passing_rank[race_id][horce_id]["stand"]
 
             high_level_score = self.race_high_level.data_get( cd, pd, ymd )
             baba = cd.baba_status()
@@ -522,7 +522,7 @@ class OnceData:
             t_instance = {}
             t_instance[data_name.predict_first_passing_rank] = predict_first_passing_rank
             t_instance[data_name.predict_first_passing_rank_index] = predict_first_passing_rank_index
-            t_instance[data_name.predict_stand_first_passing_rank] = predict_stand_first_passing_rank
+            t_instance[data_name.predict_first_passing_rank_stand] = predict_first_passing_rank_stand
             t_instance[data_name.age] = age
             t_instance[data_name.all_horce_num] = cd.all_horce_num()
             t_instance[data_name.ave_burden_weight_diff] = ave_burden_weight_diff

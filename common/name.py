@@ -160,7 +160,7 @@ class Name:
         self.popular_rank = "popular_rank"
         self.predict_first_passing_rank = "predict_first_passing_rank"
         self.predict_first_passing_rank_index = "predict_first_passing_rank_index"
-        self.predict_stand_first_passing_rank = "predict_stand_first_passing_rank"
+        self.predict_first_passing_rank_stand = "predict_first_passing_rank_stand"
         self.race_interval = "race_interval"
         self.race_level_check = "race_level_check"
         self.rank_score_odds = "rank_score_odds"
