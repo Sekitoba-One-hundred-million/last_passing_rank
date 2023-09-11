@@ -169,7 +169,6 @@ class Name:
         self.std_past_ave_horce_body = "std_past_ave_horce_body"
         self.std_past_max_horce_body = "std_past_max_horce_body"
         self.std_past_min_horce_body = "std_past_min_horce_body"
-        self.std_race_ave_horce_body = "std_race_ave_horce_body"
         self.std_race_horce_first_passing_true_skill = "std_race_horce_first_passing_true_skill"
         self.std_race_horce_true_skill = "std_race_horce_true_skill"
         self.std_race_jockey_first_passing_true_skill = "std_race_jockey_first_passing_true_skill"
