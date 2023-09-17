@@ -420,7 +420,7 @@ class OnceData:
 
             if not before_cd == None:
                 before_speed_score = before_cd.speed()
-                before_diff_score = before_cd.diff()
+                before_diff_score = max( before_cd.diff(), 0 ) * 10
                 before_id_weight_score = self.division( min( max( before_cd.id_weight(), -10 ), 10 ), 2 )
                 before_popular = before_cd.popular()
                 before_passing_list = before_cd.passing_rank().split( "-" )
@@ -447,7 +447,7 @@ class OnceData:
             baba = cd.baba_status()
             limb_math = race_limb[kk]#lib.limb_search( pd )
             key_limb = str( int( limb_math ) )            
-            weight_score = cd.weight()
+            weight_score = cd.weight() / 10
             trainer_rank_score = self.trainer_data.rank( race_id, horce_id )
             jockey_year_rank_score = self.jockey_data.year_rank( race_id, horce_id, key_before_year )
             jockey_rank_score = self.jockey_data.rank( race_id, horce_id )
