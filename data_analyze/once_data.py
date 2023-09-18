@@ -621,7 +621,7 @@ class OnceData:
             t_instance[data_name.average_speed] = average_speed
             t_instance[data_name.best_first_passing_rank] = best_first_passing_rank
             t_instance[data_name.best_second_passing_rank] = best_second_passing_rank
-            t_instance[data_name.best_weight] = best_weight - cd.weight()
+            t_instance[data_name.best_weight] = best_weight
             t_instance[data_name.level_score] = level_score
             t_instance[data_name.before_continue_not_three_rank] = before_continue_not_three_rank
             t_instance[data_name.diff_pace_time] = diff_pace_time
