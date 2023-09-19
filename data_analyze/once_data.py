@@ -140,8 +140,7 @@ class OnceData:
         answer_data = []
         answer_horce_body = []
         diff_data = []
-
-        count = 0
+        horce_id_list = []
         race_limb = {}
         current_race_data = {}
         current_race_data[data_name.horce_true_skill] = []
@@ -313,8 +312,9 @@ class OnceData:
             current_race_data[data_name.past_std_last_horce_body].append( past_std_last_horce_body )
             current_race_data[data_name.first_up3_halon_ave].append( first_up3_halon_ave )
             current_race_data[data_name.first_up3_halon_min].append( first_up3_halon_min )
+            horce_id_list.append( horce_id )
 
-        if len( current_race_data[data_name.burden_weight] ) < 2:
+        if len( horce_id_list ) < 2:
             return
 
         sort_race_data: dict[ str, list ] = {}
@@ -329,7 +329,7 @@ class OnceData:
         sort_race_data[data_name.past_ave_last_horce_body_index] = sorted( current_race_data[data_name.past_ave_last_horce_body], reverse = True )
         sort_race_data[data_name.past_min_last_horce_body_index] = sorted( current_race_data[data_name.past_min_last_horce_body], reverse = True )
         
-        N = len( current_race_data[data_name.horce_true_skill] )
+        N = len( horce_id_list )
 
         std_race_horce_true_skill = stdev( current_race_data[data_name.horce_true_skill] )
         std_race_jockey_true_skill = stdev( current_race_data[data_name.jockey_true_skill] )
@@ -373,8 +373,7 @@ class OnceData:
         first_up3_halon_ave_stand = lib.standardization( current_race_data[data_name.first_up3_halon_ave] )
         first_up3_halon_min_stand = lib.standardization( current_race_data[data_name.first_up3_halon_min] )
 
-        for kk in self.race_data[k].keys():
-            horce_id = kk
+        for count, horce_id in enumerate( horce_id_list ):
             current_data, past_data = lib.race_check( self.horce_data[horce_id],
                                                      year, day, num, race_place_num )#今回と過去のデータに分ける
             cd = lib.current_data( current_data )
@@ -445,7 +444,7 @@ class OnceData:
 
             high_level_score = self.race_high_level.data_get( cd, pd, ymd )
             baba = cd.baba_status()
-            limb_math = race_limb[kk]#lib.limb_search( pd )
+            limb_math = race_limb[horce_id]#lib.limb_search( pd )
             key_limb = str( int( limb_math ) )            
             weight_score = cd.weight() / 10
             trainer_rank_score = self.trainer_data.rank( race_id, horce_id )
@@ -636,7 +635,6 @@ class OnceData:
             t_instance[data_name.before_speed] = before_speed_score
             t_instance[data_name.before_popular] = before_popular
 
-            count += 1
             t_list = self.data_list_create( t_instance )
 
             lib.dic_append( self.simu_data, race_id, {} )
