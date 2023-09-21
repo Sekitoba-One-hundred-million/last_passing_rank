@@ -405,12 +405,12 @@ class OnceData:
 
             answer_corner_horce_body = current_horce_body[max_corner_key][key_horce_num]
 
-            before_speed_score = -1
-            before_diff_score = 1000
-            before_id_weight_score = 1000
-            before_popular = -1
-            before_passing_list = [ -1, -1, -1, -1 ]
-            before_rank = -1
+            before_speed_score = -1000
+            before_diff_score = -1000
+            before_id_weight_score = -1000
+            before_popular = -1000
+            before_passing_list = [ -1000, -1000, -1000, -1000 ]
+            before_rank = -1000
             up3_standard_value = -1000
             diff_load_weight = -1000
             before_pace_up_diff = -1000
