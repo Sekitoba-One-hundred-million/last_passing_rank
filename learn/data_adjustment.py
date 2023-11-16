@@ -49,14 +49,14 @@ def score_check( simu_data, model, upload = False ):
 
     c = 0
     predict_data = model.predict( np.array( predict_use_data ) )
-
+    
     for race_id in simu_data.keys():
         year = race_id[0:4]
         check_data = []
         stand_score_list = []
         simu_predict_data[race_id] = {}
         all_horce_num = len( simu_data[race_id] )
-        
+
         for horce_id in simu_data[race_id].keys():
             predict_score = min( predict_data[c], all_horce_num )
             c += 1
@@ -70,41 +70,35 @@ def score_check( simu_data, model, upload = False ):
         before_score = 1
         next_rank = 1
         continue_count = 1
-        
+
         for i in range( 0, len( check_data ) ):
             predict_score = -1
             current_score = int( check_data[i]["score"] + 0.5 )
 
-            if continue_count >= 2:
-                next_rank += continue_count
-                continue_count = 0
-            
-            if i == 0:
-                predict_score = 1
-            elif before_score == current_score:
-                continue_count += 1
-                predict_score = next_rank
-            else:
-                next_rank += continue_count
-                continue_count = 1
-                predict_score = next_rank
+            #if continue_count >= 2:
+            #    next_rank += continue_count
+            #    continue_count = 0
+
+            #if i == 0:
+            #    predict_score = 1
+            #elif before_score == current_score:
+            #    continue_count += 1
+            #    predict_score = next_rank
+            #else:
+            #    next_rank += continue_count
+            #    continue_count = 1
+            #    predict_score = next_rank
 
             check_answer = check_data[i]["answer"]
             before_score = current_score
-            #predict_score = int( check_data[i]["score"] + 0.5 )
             simu_predict_data[race_id][check_data[i]["horce_id"]] = {}
-            simu_predict_data[race_id][check_data[i]["horce_id"]]["index"] = predict_score
+            simu_predict_data[race_id][check_data[i]["horce_id"]]["index"] = i + 1
             simu_predict_data[race_id][check_data[i]["horce_id"]]["score"] = check_data[i]["score"]
             simu_predict_data[race_id][check_data[i]["horce_id"]]["stand"] = stand_score_list[i]
 
             if year in lib.test_years:
-                score1 += math.pow( predict_score - check_answer, 2 )
                 score2 += math.pow( max( int( check_data[i]["score"] + 0.5 ), 1 ) - check_answer, 2 )
-                count += 1            
-            
-    score1 /= count
-    score1 = math.sqrt( score1 )
-    print( "score1: {}".format( score1 ) )
+                count += 1
 
     score2 /= count
     score2 = math.sqrt( score2 )
