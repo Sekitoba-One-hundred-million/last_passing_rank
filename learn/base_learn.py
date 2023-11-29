@@ -88,6 +88,6 @@ def main( data, simu_data, learn = True ):
     else:
         model = dm.pickle_load( lib.name.model_name() )
         
-    data_adjustment.score_check( simu_data, model, upload = True )
+    data_adjustment.score_check( simu_data, model, score_years = lib.simu_years, upload = True )
     
     return model
