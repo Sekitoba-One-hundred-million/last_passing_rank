@@ -17,9 +17,9 @@ def data_check( data ):
         year = data["year"][i]
         query = len( data["teacher"][i] )
 
-        if year in lib.test_years:
+        if lib.test_year_check( year ):
             result["test_query"].append( query )
-        else:
+        elif not year in lib.test_years:
             result["query"].append( query )
 
         for r in range( 0, query ):
@@ -27,18 +27,17 @@ def data_check( data ):
             last_rank = int( data["answer"][i][r] )
             current_answer = last_rank
 
-            if year in lib.test_years:
+            if lib.test_year_check( year ):
                 result["test_teacher"].append( current_data )
                 result["test_answer"].append( current_answer )
-            else:
+            elif not year in lib.test_years:
                 result["teacher"].append( current_data )
                 result["answer"].append( current_answer  )
 
     return result
 
-def score_check( simu_data, model, upload = False ):
-    score1 = 0
-    score2 = 0
+def score_check( simu_data, model, score_years = lib.test_years, upload = False ):
+    score = 0
     count = 0
     simu_predict_data = {}
     predict_use_data = []
@@ -74,21 +73,6 @@ def score_check( simu_data, model, upload = False ):
         for i in range( 0, len( check_data ) ):
             predict_score = -1
             current_score = int( check_data[i]["score"] + 0.5 )
-
-            #if continue_count >= 2:
-            #    next_rank += continue_count
-            #    continue_count = 0
-
-            #if i == 0:
-            #    predict_score = 1
-            #elif before_score == current_score:
-            #    continue_count += 1
-            #    predict_score = next_rank
-            #else:
-            #    next_rank += continue_count
-            #    continue_count = 1
-            #    predict_score = next_rank
-
             check_answer = check_data[i]["answer"]
             before_score = current_score
             simu_predict_data[race_id][check_data[i]["horce_id"]] = {}
@@ -96,15 +80,15 @@ def score_check( simu_data, model, upload = False ):
             simu_predict_data[race_id][check_data[i]["horce_id"]]["score"] = check_data[i]["score"]
             simu_predict_data[race_id][check_data[i]["horce_id"]]["stand"] = stand_score_list[i]
 
-            if year in lib.test_years:
-                score2 += math.pow( max( int( check_data[i]["score"] + 0.5 ), 1 ) - check_answer, 2 )
+            if year in score_years:
+                score += math.pow( max( int( check_data[i]["score"] + 0.5 ), 1 ) - check_answer, 2 )
                 count += 1
 
-    score2 /= count
-    score2 = math.sqrt( score2 )
-    print( "score2: {}".format( score2 ) )
+    score /= count
+    score = math.sqrt( score )
+    print( "score: {}".format( score ) )
 
     if upload:
         dm.pickle_upload( "predict_last_passing_rank.pickle", simu_predict_data )
 
-    return score1, score2
+    return score

@@ -47,9 +47,9 @@ def objective( trial ):
                      verbose_eval = 10,
                      num_boost_round = 5000 )
 
-    index_score, mdcd_score = data_adjustment.score_check( simu_data, model )
+    score = data_adjustment.score_check( simu_data, model, score_years = lib.score_years )
     
-    return ( index_score + mdcd_score ) * 10
+    return score * 10
 
 def optuna_main( arg_data, arg_simu_data ):
     global data
