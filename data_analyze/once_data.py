@@ -427,7 +427,7 @@ class OnceData:
 
             if not before_cd == None:
                 before_speed_score = before_cd.speed()
-                before_diff_score = max( before_cd.diff(), 0 ) * 10
+                before_diff_score = before_cd.diff()
                 before_id_weight_score = self.division( min( max( before_cd.id_weight(), -10 ), 10 ), 2 )
                 before_popular = before_cd.popular()
                 before_passing_list = before_cd.passing_rank().split( "-" )
