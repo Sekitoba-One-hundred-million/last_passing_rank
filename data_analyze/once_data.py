@@ -428,7 +428,7 @@ class OnceData:
             if not before_cd == None:
                 before_speed_score = before_cd.speed()
                 before_diff_score = before_cd.diff()
-                before_id_weight_score = self.division( min( max( before_cd.id_weight(), -10 ), 10 ), 2 )
+                before_id_weight_score = before_cd.id_weight()
                 before_popular = before_cd.popular()
                 before_passing_list = before_cd.passing_rank().split( "-" )
                 before_rank = before_cd.rank()
@@ -474,8 +474,6 @@ class OnceData:
             ave_first_passing_rank = pd.first_passing_rank()
             three_average = pd.three_average()
             three_difference = pd.three_difference()
-            one_rate = pd.one_rate()
-            two_rate = pd.two_rate()
             three_rate = pd.three_rate()
             match_rank = pd.match_rank()
             best_weight = pd.best_weight()
@@ -510,7 +508,6 @@ class OnceData:
             t_instance[data_name.predict_first_passing_rank] = predict_first_passing_rank
             t_instance[data_name.predict_first_passing_rank_index] = predict_first_passing_rank_index
             t_instance[data_name.predict_first_passing_rank_stand] = predict_first_passing_rank_stand
-            t_instance[data_name.age] = age
             t_instance[data_name.all_horce_num] = cd.all_horce_num()
             t_instance[data_name.ave_burden_weight_diff] = ave_burden_weight_diff
             t_instance[data_name.ave_first_passing_rank] = ave_first_passing_rank
@@ -534,7 +531,6 @@ class OnceData:
             t_instance[data_name.odds] = cd.odds()
             t_instance[data_name.one_popular_limb] = one_popular_limb
             t_instance[data_name.one_popular_odds] = one_popular_odds
-            t_instance[data_name.past_std_last_horce_body] = past_std_last_horce_body
             t_instance[data_name.place] = place_num
             t_instance[data_name.two_popular_limb] = two_popular_limb
             t_instance[data_name.two_popular_odds] = two_popular_odds
@@ -594,8 +590,8 @@ class OnceData:
             t_instance[data_name.std_past_min_last_horce_body] = std_past_min_last_horce_body
             t_instance[data_name.three_average] = three_average
             t_instance[data_name.three_difference] = three_difference
-            t_instance[data_name.one_rate] = one_rate
-            t_instance[data_name.two_rate] = two_rate
+            t_instance[data_name.one_rate] = pd.one_rate()
+            t_instance[data_name.two_rate] = pd.two_rate()
             t_instance[data_name.three_rate] = three_rate
             t_instance[data_name.match_rank] = match_rank
             t_instance[data_name.passing_regression] = passing_regression
