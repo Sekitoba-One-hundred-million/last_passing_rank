@@ -244,7 +244,7 @@ class OnceData:
                 jockey_last_passing_true_skill = self.last_passing_true_skill_data["jockey"][race_id][jockey_id]
 
             if race_id in self.last_passing_true_skill_data["trainer"] and \
-              jockey_id in self.last_passing_true_skill_data["trainer"][race_id]:
+              trainer_id in self.last_passing_true_skill_data["trainer"][race_id]:
                 trainer_last_passing_true_skill = self.last_passing_true_skill_data["trainer"][race_id][trainer_id]
 
             past_min_last_horce_body = 1000
