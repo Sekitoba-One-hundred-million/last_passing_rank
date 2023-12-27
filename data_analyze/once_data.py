@@ -3,7 +3,6 @@ import copy
 import sklearn
 from tqdm import tqdm
 from mpi4py import MPI
-from statistics import stdev
 
 import sekitoba_library as lib
 import sekitoba_data_manage as dm
@@ -269,7 +268,7 @@ class OnceData:
                 past_ave_last_horce_body = lib.average( past_last_horce_body_list )
 
                 if len( past_last_horce_body_list ) > 1:
-                    past_std_last_horce_body = stdev( past_last_horce_body_list )
+                    past_std_last_horce_body = lib.stdev( past_last_horce_body_list )
 
             popular = cd.popular()
             odds = cd.odds()
@@ -342,14 +341,14 @@ class OnceData:
         
         N = len( horce_id_list )
 
-        std_race_horce_true_skill = stdev( current_race_data[data_name.horce_true_skill] )
-        std_race_jockey_true_skill = stdev( current_race_data[data_name.jockey_true_skill] )
-        std_race_trainer_true_skill = stdev( current_race_data[data_name.trainer_true_skill] )
-        std_speed_index = stdev( current_race_data[data_name.speed_index] )
-        std_up_rate = stdev( current_race_data[data_name.up_rate] )
-        std_past_ave_last_horce_body = stdev( current_race_data[data_name.past_ave_last_horce_body] )
-        std_past_max_last_horce_body = stdev( current_race_data[data_name.past_max_last_horce_body] )
-        std_past_min_last_horce_body = stdev( current_race_data[data_name.past_min_last_horce_body] )
+        std_race_horce_true_skill = lib.stdev( current_race_data[data_name.horce_true_skill] )
+        std_race_jockey_true_skill = lib.stdev( current_race_data[data_name.jockey_true_skill] )
+        std_race_trainer_true_skill = lib.stdev( current_race_data[data_name.trainer_true_skill] )
+        std_speed_index = lib.stdev( current_race_data[data_name.speed_index] )
+        std_up_rate = lib.stdev( current_race_data[data_name.up_rate] )
+        std_past_ave_last_horce_body = lib.stdev( current_race_data[data_name.past_ave_last_horce_body] )
+        std_past_max_last_horce_body = lib.stdev( current_race_data[data_name.past_max_last_horce_body] )
+        std_past_min_last_horce_body = lib.stdev( current_race_data[data_name.past_min_last_horce_body] )
 
         min_race_horce_true_skill = lib.minimum( current_race_data[data_name.horce_true_skill] )
         min_race_jockey_true_skill = lib.minimum( current_race_data[data_name.jockey_true_skill] )
