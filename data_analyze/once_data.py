@@ -287,11 +287,6 @@ class OnceData:
                 for math_key in stride_ablity_data[stride_data_key].keys():
                     current_race_data[stride_data_key+"_"+math_key].append( stride_ablity_data[stride_data_key][math_key] )
 
-            condition_devi = -1000
-            if race_id in self.condition_devi_data and \
-              horce_id in self.condition_devi_data[race_id]:
-                condition_devi = self.condition_devi_data[race_id][horce_id]
-                
             current_year = cd.year()
             horce_birth_day = int( horce_id[0:4] )
             age = current_year - horce_birth_day
@@ -314,7 +309,6 @@ class OnceData:
             current_race_data[data_name.past_max_last_horce_body].append( past_max_last_horce_body )
             current_race_data[data_name.past_ave_last_horce_body].append( past_ave_last_horce_body )
             current_race_data[data_name.past_std_last_horce_body].append( past_std_last_horce_body )
-            current_race_data[data_name.condition_devi].append( condition_devi )
             horce_id_list.append( horce_id )
 
         if len( horce_id_list ) < 2:

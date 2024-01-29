@@ -205,10 +205,6 @@ up_rate_index
 up_rate_stand
 weather
 weight
-condition_devi
-condition_devi_index
-condition_devi_stand
-condition_devi_devi
 predict_pace
 predict_netkeiba_pace
 predict_netkeiba_deployment
