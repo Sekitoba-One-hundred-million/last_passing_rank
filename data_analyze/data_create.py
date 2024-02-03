@@ -50,6 +50,7 @@ def main( update = False ):
     if rank == 0:
         result = {}
         dm.dl.local_keep()
+        dm.dl.data_clear()
         
         for i in range( 1, size ):
             comm.send( True, dest = i, tag = 1 )
