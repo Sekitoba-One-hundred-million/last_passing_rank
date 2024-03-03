@@ -73,7 +73,7 @@ def main( update = False ):
         ok = comm.recv( source = 0, tag = 1 )
         od = OnceData()
         print( "start rank:{}".format( rank ) )
-        key_list = key_list_search( rank, size, list( od.race_data.keys() ) )
+        key_list = key_list_search( rank, size, list( od.race_data.get_all_race_id() ) )
 
         if rank == 1:
             for k in tqdm( key_list ):
