@@ -116,7 +116,7 @@ class OnceData:
         if key_kind == "0" or key_kind == "3":
             return
 
-        predict_pace = -1
+        predict_pace = {}
 
         if race_id in self.predict_pace_data:
             predict_pace = self.predict_pace_data[race_id]
@@ -542,9 +542,14 @@ class OnceData:
             t_instance[data_name.speed_index_index] = \
               current_race_data[data_name.speed_index_index].index( current_race_data[data_name.speed_index][count] )
             t_instance[data_name.speed_index_stand] = current_race_data[data_name.speed_index_stand][count]
-            t_instance[data_name.predict_pace] = predict_pace
             t_instance[data_name.predict_netkeiba_pace] = predict_netkeiba_pace
             t_instance[data_name.predict_netkeiba_deployment] = predict_netkeiba_deployment
+
+            for pace_key in lib.predict_pace_key_list:
+                if pace_key in predict_pace:
+                    t_instance["predict_"+pace_key] = predict_pace[pace_key]
+                else:
+                    t_instance["predict_"+pace_key] = -1000
 
             str_index = "_index"
             for data_key in current_race_data.keys():
