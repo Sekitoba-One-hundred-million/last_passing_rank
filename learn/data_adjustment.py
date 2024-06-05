@@ -51,6 +51,7 @@ def score_check( simu_data, model, score_years = lib.test_years, upload = False 
     
     for race_id in simu_data.keys():
         year = race_id[0:4]
+        race_place_num = race_id[4:6]
         check_data = []
         stand_score_list = []
         simu_predict_data[race_id] = {}
@@ -80,7 +81,7 @@ def score_check( simu_data, model, score_years = lib.test_years, upload = False 
             simu_predict_data[race_id][check_data[i]["horce_id"]]["score"] = check_data[i]["score"]
             simu_predict_data[race_id][check_data[i]["horce_id"]]["stand"] = stand_score_list[i]
 
-            if year in score_years:
+            if year in score_years and not int( race_place_num ) == 8:
                 score += math.pow( max( int( check_data[i]["score"] + 0.5 ), 1 ) - check_answer, 2 )
                 count += 1
 
