@@ -336,3 +336,6 @@ class Name:
         self.predict_last_up3 = "predict_last_up3"
         self.predict_netkeiba_pace = "predict_netkeiba_pace"
         self.predict_netkeiba_deployment = "predict_netkeiba_deployment"
+        self.stamina = "stamina"
+        self.stamina_index = "stamina_index"
+        self.stamina_stand = "stamina_stand"

@@ -63,7 +63,7 @@ def main():
                 learn_data["teacher"][i][r] = data_remove( learn_data["teacher"][i][r], remove_list )
 
         if l_check:
-            learn.main( learn_data, simu_data, learn = ( l_check or u_check ) )
+            learn.main( learn_data, simu_data, state = s_check )
         elif o_check:
             learn.optuna_main( learn_data, simu_data )
             

@@ -79,15 +79,11 @@ def importance_check( model ):
     for i in range( 0, len( result ) ):
         wf.write( "{}: {}\n".format( result[i]["key"], result[i]["score"] ) )        
 
-def main( data, simu_data, learn = True ):
-    learn_data = data_adjustment.data_check( data )
+def main( data, simu_data, state = "test" ):
+    learn_data = data_adjustment.data_check( data, state = state )
 
-    if learn:
-        model = lg_main( learn_data )
-        importance_check( model )
-    else:
-        model = dm.pickle_load( lib.name.model_name() )
-        
+    model = lg_main( learn_data )
+    importance_check( model )
     data_adjustment.score_check( simu_data, model, score_years = lib.simu_years, upload = True )
     
     return model

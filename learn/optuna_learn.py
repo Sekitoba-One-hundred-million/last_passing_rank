@@ -55,7 +55,7 @@ def optuna_main( arg_data, arg_simu_data ):
     global data
     global simu_data
     simu_data = arg_simu_data
-    data = data_adjustment.data_check( arg_data )
+    data = data_adjustment.data_check( arg_data, state = "optuna" )
 
     study = optuna.create_study()
     study.optimize(objective, n_trials=100)

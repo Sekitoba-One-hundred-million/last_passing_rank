@@ -334,3 +334,6 @@ predict_first_up3
 predict_last_up3
 predict_netkeiba_pace
 predict_netkeiba_deployment
+stamina
+stamina_index
+stamina_stand

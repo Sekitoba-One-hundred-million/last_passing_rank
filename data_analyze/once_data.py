@@ -156,9 +156,9 @@ class OnceData:
                 continue
 
             limb_math = lib.limb_search( pd )
+            key_limb = str( int( limb_math ) )
 
             if not limb_math == -1:
-                key_limb = str( int( limb_math ) )
                 lib.dic_append( current_race_data[data_name.my_limb_count], key_limb, 0 )
                 current_race_data[data_name.my_limb_count][key_limb] += 1
                 
@@ -242,6 +242,7 @@ class OnceData:
             current_race_data[data_name.past_max_last_horce_body].append( past_max_last_horce_body )
             current_race_data[data_name.past_ave_last_horce_body].append( past_ave_last_horce_body )
             current_race_data[data_name.past_std_last_horce_body].append( past_std_last_horce_body )
+            current_race_data[data_name.stamina].append( pd.stamina_create( key_limb ) )
             horce_id_list.append( horce_id )
 
         if len( horce_id_list ) < 2:
