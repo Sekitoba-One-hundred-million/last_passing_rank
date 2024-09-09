@@ -186,10 +186,10 @@ class OnceData:
             jockey_last_passing_true_skill = self.race_horce_data.data[horce_id]["jockey_last_passing_true_skill"]
             trainer_last_passing_true_skill = self.race_horce_data.data[horce_id]["trainer_last_passing_true_skill"]
 
-            past_min_last_horce_body = 1000
-            past_max_last_horce_body = 1000
-            past_ave_last_horce_body = 1000
-            past_std_last_horce_body = 1000
+            past_min_last_horce_body = -1000
+            past_max_last_horce_body = -1000
+            past_ave_last_horce_body = -1000
+            past_std_last_horce_body = -1000
             past_last_horce_body_list = pd.past_last_horce_body_list()
 
             if not len( past_last_horce_body_list ) == 0:
@@ -199,7 +199,7 @@ class OnceData:
 
                 if len( past_last_horce_body_list ) > 1:
                     past_std_last_horce_body = lib.stdev( past_last_horce_body_list )
-
+                    
             popular = cd.popular()
             odds = cd.odds()
 
