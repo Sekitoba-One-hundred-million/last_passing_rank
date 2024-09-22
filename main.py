@@ -26,8 +26,8 @@ def main():
     from mpi4py import MPI
     from tqdm import tqdm
 
-    import sekitoba_data_manage as dm
-    import sekitoba_library as lib
+    import SekitobaDataManage as dm
+    import SekitobaLibrary as lib
     from data_analyze import data_create
     import learn
     lib.name.set_name( "last_passing_rank" )

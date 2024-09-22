@@ -1,6 +1,6 @@
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
-from sekitoba_data_create.high_level_data_get import RaceHighLevel
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
+from SekitobaDataCreate.high_level_data_get import RaceHighLevel
 
 from tqdm import tqdm
 import matplotlib.pyplot as plt

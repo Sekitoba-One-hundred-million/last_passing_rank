@@ -3,9 +3,9 @@ from tqdm import tqdm
 from mpi4py import MPI
 
 from data_analyze.once_data import OnceData
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
-import sekitoba_data_create as dc
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
+import SekitobaDataCreate as dc
 
 def key_list_search( rank, size, key_list ):
     n = int( len( key_list ) / ( size - 1 ) )

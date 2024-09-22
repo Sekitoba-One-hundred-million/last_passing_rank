@@ -2,8 +2,8 @@ import os
 import numpy as np
 from tqdm import tqdm
 
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
 
 dm.dl.file_set( "race_data.pickle" )
 dm.dl.file_set( "race_info_data.pickle" )

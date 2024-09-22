@@ -1,7 +1,7 @@
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
 
-from sekitoba_data_create.before_race_score_get import BeforeRaceScore
+from SekitobaDataCreate.before_race_score_get import BeforeRaceScore
 
 import math
 from tqdm import tqdm

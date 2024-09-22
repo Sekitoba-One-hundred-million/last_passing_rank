@@ -1,6 +1,6 @@
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
-from sekitoba_data_create.trainer_data_get import TrainerData
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
+from SekitobaDataCreate.trainer_data_get import TrainerData
 
 from tqdm import tqdm
 import matplotlib.pyplot as plt

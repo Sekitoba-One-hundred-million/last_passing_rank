@@ -2,9 +2,9 @@ import os
 import numpy as np
 from tqdm import tqdm
 
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
-from sekitoba_data_create.time_index_get import TimeIndexGet
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
+from SekitobaDataCreate.time_index_get import TimeIndexGet
 
 dm.dl.file_set( "race_data.pickle" )
 dm.dl.file_set( "race_info_data.pickle" )

@@ -1,6 +1,6 @@
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
-from sekitoba_data_create.jockey_data_get import JockeyData
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
+from SekitobaDataCreate.jockey_data_get import JockeyData
 
 from tqdm import tqdm
 import matplotlib.pyplot as plt

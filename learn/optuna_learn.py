@@ -6,8 +6,8 @@ import lightgbm as lgb
 from tqdm import tqdm
 from statistics import stdev
 
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
 from learn import data_adjustment
 
 data = {}

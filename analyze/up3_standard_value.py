@@ -1,6 +1,6 @@
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
-from sekitoba_data_create.race_type import RaceType
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
+from SekitobaDataCreate.race_type import RaceType
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 

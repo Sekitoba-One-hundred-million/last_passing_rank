@@ -1,7 +1,7 @@
-import sekitoba_library as lib
-import sekitoba_data_manage as dm
+import SekitobaLibrary as lib
+import SekitobaDataManage as dm
 
-from sekitoba_data_create.train_index_get import TrainIndexGet
+from SekitobaDataCreate.train_index_get import TrainIndexGet
 
 import math
 from tqdm import tqdm
