@@ -25,7 +25,7 @@ def main():
     time_index = TimeIndexGet()
     
     for k in tqdm( race_data.keys() ):
-        race_id = lib.id_get( k )
+        race_id = lib.idGet( k )
         year = race_id[0:4]
         race_place_num = race_id[4:6]
         day = race_id[9]
@@ -50,38 +50,38 @@ def main():
         
         for kk in race_data[k].keys():
             horce_id = kk
-            current_data, past_data = lib.race_check( horce_data[horce_id],
+            current_data, past_data = lib.raceCheck( horce_data[horce_id],
                                                      year, day, num, race_place_num )#今回と過去のデータに分ける
-            cd = lib.current_data( current_data )
-            pd = lib.past_data( past_data, current_data )
+            cd = lib.CurrentData( current_data )
+            pd = lib.PastData( past_data, current_data )
 
-            if not cd.race_check():
+            if not cd.raceCheck():
                 continue
 
-            current_time_index = time_index.main( horce_id, pd.past_day_list() )
-            speed, up_speed, pace_speed = pd.speed_index( baba_index_data[horce_id] )
-            #speed_index_list.append( lib.max_check( speed ) + lib.max_check( up_speed ) + lib.max_check( pace_speed ) + current_time_index["max"] )
-            speed_index_list.append( lib.max_check( speed ) + current_time_index["max"] )
-            #up_speed_index_list.append( lib.max_check( up_speed ) )
-            #pace_speed_index_list.append( lib.max_check( pace_speed ) )
+            current_time_index = time_index.main( horce_id, pd.pastDayList() )
+            speed, up_speed, pace_speed = pd.speedIndex( baba_index_data[horce_id] )
+            #speed_index_list.append( lib.maxCheck( speed ) + lib.maxCheck( up_speed ) + lib.maxCheck( pace_speed ) + current_time_index["max"] )
+            speed_index_list.append( lib.maxCheck( speed ) + current_time_index["max"] )
+            #up_speed_index_list.append( lib.maxCheck( up_speed ) )
+            #pace_speed_index_list.append( lib.maxCheck( pace_speed ) )
 
         sort_speed_index = sorted( speed_index_list, reverse = True )
         
         for kk in race_data[k].keys():
             horce_id = kk
-            current_data, past_data = lib.race_check( horce_data[horce_id],
+            current_data, past_data = lib.raceCheck( horce_data[horce_id],
                                                      year, day, num, race_place_num )#今回と過去のデータに分ける
-            cd = lib.current_data( current_data )
-            pd = lib.past_data( past_data, current_data )
+            cd = lib.CurrentData( current_data )
+            pd = lib.PastData( past_data, current_data )
 
-            if not cd.race_check():
+            if not cd.raceCheck():
                 continue
 
             score = sort_speed_index.index( speed_index_list[count] )
             key = str( int( score ) )
             
-            lib.dic_append( result, year, {} )
-            lib.dic_append( result[year], key, { RANK: 0, COUNT: 0 } )
+            lib.dicAppend( result, year, {} )
+            lib.dicAppend( result[year], key, { RANK: 0, COUNT: 0 } )
             
             result[year][key][COUNT] += 1
             result[year][key][RANK] += cd.rank()

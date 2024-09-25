@@ -26,7 +26,7 @@ def main():
     parent_id_data = dm.dl.data_get( "parent_id_data.pickle" )
     
     for k in tqdm( race_data.keys() ):
-        race_id = lib.id_get( k )
+        race_id = lib.idGet( k )
         year = race_id[0:4]
         race_place_num = race_id[4:6]
         day = race_id[9]
@@ -46,12 +46,12 @@ def main():
 
         for kk in race_data[k].keys():
             horce_id = kk
-            current_data, past_data = lib.race_check( horce_data[horce_id],
+            current_data, past_data = lib.raceCheck( horce_data[horce_id],
                                                      year, day, num, race_place_num )#今回と過去のデータに分ける
-            cd = lib.current_data( current_data )
-            pd = lib.past_data( past_data, current_data )
+            cd = lib.CurrentData( current_data )
+            pd = lib.PastData( past_data, current_data )
 
-            if not cd.race_check():
+            if not cd.raceCheck():
                 continue
 
             mother_id = parent_id_data[horce_id]["mother"]
@@ -61,20 +61,20 @@ def main():
             except:
                 continue
             
-            mother_pd = lib.past_data( mother_data, [] )
+            mother_pd = lib.PastData( mother_data, [] )
             count = 0
             score = 0
             
-            for mother_cd in mother_pd.past_cd_list():
+            for mother_cd in mother_pd.pastCdList():
                 c = 0
                 
                 if mother_cd.place() == cd.place():
                     c += 1
 
-                if mother_cd.baba_status() == cd.baba_status():
+                if mother_cd.babaStatus() == cd.babaStatus():
                     c += 1
 
-                if lib.dist_check( mother_cd.dist() * 1000 ) == lib.dist_check( cd.dist() * 1000 ):
+                if lib.distCheck( mother_cd.dist() * 1000 ) == lib.distCheck( cd.dist() * 1000 ):
                     c += 1
 
                 count += c
@@ -86,8 +86,8 @@ def main():
             score = int( score )
             key = str( int( score ) )
             
-            lib.dic_append( result, year, {} )
-            lib.dic_append( result[year], key, { RANK: 0, COUNT: 0 } )
+            lib.dicAppend( result, year, {} )
+            lib.dicAppend( result[year], key, { RANK: 0, COUNT: 0 } )
             
             result[year][key][COUNT] += 1
             result[year][key][RANK] += cd.rank()

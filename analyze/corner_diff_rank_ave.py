@@ -19,7 +19,7 @@ def main():
     horce_data = dm.dl.data_get( "horce_data_storage.pickle" )
     
     for k in tqdm( race_data.keys() ):
-        race_id = lib.id_get( k )
+        race_id = lib.idGet( k )
         year = race_id[0:4]
         race_place_num = race_id[4:6]
         day = race_id[9]
@@ -39,22 +39,22 @@ def main():
 
         for kk in race_data[k].keys():
             horce_id = kk
-            current_data, past_data = lib.race_check( horce_data[horce_id],
+            current_data, past_data = lib.raceCheck( horce_data[horce_id],
                                                      year, day, num, race_place_num )#今回と過去のデータに分ける
-            cd = lib.current_data( current_data )
-            pd = lib.past_data( past_data, current_data )
+            cd = lib.CurrentData( current_data )
+            pd = lib.PastData( past_data, current_data )
 
-            if not cd.race_check():
+            if not cd.raceCheck():
                 continue
 
             score = pd.corner_diff_rank()
             key = str( int( score ) )
             
-            lib.dic_append( result, year, {} )
-            lib.dic_append( result[year], key, { RANK: 0, COUNT: 0 } )
+            lib.dicAppend( result, year, {} )
+            lib.dicAppend( result[year], key, { RANK: 0, COUNT: 0 } )
             
             result[year][key][COUNT] += 1
-            result[year][key][RANK] += cd.rank() / cd.all_horce_num()
+            result[year][key][RANK] += cd.rank() / cd.allHorceNum()
 
     for year in result.keys():
         for k in result[year].keys():
