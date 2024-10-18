@@ -48,7 +48,6 @@ def lg_main( data ):
     bst = lgb.train( params = lgbm_params,
                      train_set = lgb_train,     
                      valid_sets = [lgb_train, lgb_vaild ],
-                     verbose_eval = 10,
                      num_boost_round = 5000 )
     
     dm.pickle_upload( lib.name.model_name(), bst )
