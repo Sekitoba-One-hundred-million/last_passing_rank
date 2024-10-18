@@ -7,3 +7,5 @@
 /data_analyze/common/
 /simulation/__pycache__/
 /rank_learn/__pycache__/
+.direnv/
+.devenv/
