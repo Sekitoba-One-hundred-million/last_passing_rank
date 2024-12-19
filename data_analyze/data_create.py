@@ -61,7 +61,6 @@ def main( update = False ):
         for i in range( 1, size ):
             file_name = comm.recv( source = i, tag = 2 )
             instance = dm.pickle_load( file_name )
-            dm.pickle_delete( file_name )
             result["simu"].update( instance["simu"] )
 
             for k in instance["data"].keys():
