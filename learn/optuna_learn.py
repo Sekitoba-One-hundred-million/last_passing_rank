@@ -59,7 +59,7 @@ def optuna_main( arg_data, arg_simu_data ):
 
     for i in range( 0, 5 ):
         study = optuna.create_study()
-        study.optimize(objective, n_trials=10)
+        study.optimize(objective, n_trials=100)
         paramList.append( study.best_params )
     
     f = open( "best_params.json", "w" )
