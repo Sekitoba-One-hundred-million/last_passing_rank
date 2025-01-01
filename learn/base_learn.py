@@ -10,12 +10,12 @@ import SekitobaLibrary as lib
 import SekitobaDataManage as dm
 from learn import data_adjustment
 
-def lg_main( data ):
+def lg_main( data, index = None ):
     params = {}
     
-    if os.path.isfile( "best_params.json" ):
+    if os.path.isfile( "best_params.json" ) and not index is None:
         f = open( "best_params.json", "r" )
-        params = json.load( f )
+        params = json.load( f )[index]
         f.close()
     else:
         params["learning_rate"] = 0.01
@@ -49,8 +49,6 @@ def lg_main( data ):
                      train_set = lgb_train,     
                      valid_sets = [lgb_train, lgb_vaild ],
                      num_boost_round = 5000 )
-    
-    dm.pickle_upload( lib.name.model_name(), bst )
         
     return bst
     
@@ -80,9 +78,12 @@ def importance_check( model ):
 
 def main( data, simu_data, state = "test" ):
     learn_data = data_adjustment.data_check( data, state = state )
+    modelList = []
 
-    model = lg_main( learn_data )
+    for i in range( 0, 5 ):
+        model = lg_main( learn_data, index = i )
+        modelList.append( model )
+        
     importance_check( model )
-    data_adjustment.score_check( simu_data, model, score_years = lib.simu_years, upload = True )
-    
-    return model
+    data_adjustment.score_check( simu_data, modelList, score_years = lib.simu_years, upload = True )
+    dm.pickle_upload( lib.name.model_name(), modelList )

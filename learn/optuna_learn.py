@@ -44,10 +44,9 @@ def objective( trial ):
     model = lgb.train( params = lgbm_params,
                      train_set = lgb_train,     
                      valid_sets = [lgb_train, lgb_vaild ],
-                     verbose_eval = 10,
                      num_boost_round = 5000 )
 
-    score = data_adjustment.score_check( simu_data, model, score_years = lib.score_years )
+    score = data_adjustment.score_check( simu_data, [ model ], score_years = lib.score_years )
     
     return score * 10
 
@@ -56,11 +55,13 @@ def optuna_main( arg_data, arg_simu_data ):
     global simu_data
     simu_data = arg_simu_data
     data = data_adjustment.data_check( arg_data, state = "optuna" )
+    paramList = []
 
-    study = optuna.create_study()
-    study.optimize(objective, n_trials=100)
-    print( study.best_params )
+    for i in range( 0, 5 ):
+        study = optuna.create_study()
+        study.optimize(objective, n_trials=10)
+        paramList.append( study.best_params )
     
     f = open( "best_params.json", "w" )
-    json.dump( study.best_params, f )
+    json.dump( paramList, f )
     f.close()
