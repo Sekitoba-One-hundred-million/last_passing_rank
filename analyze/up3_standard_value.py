@@ -22,7 +22,7 @@ def main():
     race_type = RaceType()
     
     for k in tqdm( race_data.keys() ):
-        race_id = lib.idGet( k )
+        race_id = lib.id_get( k )
         year = race_id[0:4]
         race_place_num = race_id[4:6]
         day = race_id[9]
@@ -42,27 +42,27 @@ def main():
 
         for kk in race_data[k].keys():
             horce_id = kk
-            current_data, past_data = lib.raceCheck( horce_data[horce_id],
+            current_data, past_data = lib.race_check( horce_data[horce_id],
                                                      year, day, num, race_place_num )#今回と過去のデータに分ける
             cd = lib.CurrentData( current_data )
             pd = lib.PastData( past_data, current_data )
 
-            if not cd.raceCheck():
+            if not cd.race_check():
                 continue
 
-            before_cd = pd.beforeCd()
+            before_cd = pd.before_cd()
 
             if before_cd == None:
                 continue
 
             p1, p2 = before_cd.pace()
-            up3 = before_cd.upTime()
+            up3 = before_cd.up_time()
             score = 0
             score = max( min( ( up3 - p2 ) * 5, 15 ), -10 )
             key = str( int( score ) )
             
-            lib.dicAppend( result, year, {} )
-            lib.dicAppend( result[year], key, { RANK: 0, COUNT: 0 } )
+            lib.dic_append( result, year, {} )
+            lib.dic_append( result[year], key, { RANK: 0, COUNT: 0 } )
             
             result[year][key][COUNT] += 1
             result[year][key][RANK] += cd.rank()

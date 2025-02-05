@@ -16,7 +16,7 @@ def data_check( data, state = "test" ):
     for i in range( 0, len( data["teacher"] ) ):
         year = data["year"][i]
         query = len( data["teacher"][i] )
-        data_check = lib.testYearCheck( data["year"][i], state )
+        data_check = lib.test_year_check( data["year"][i], state )
 
         if data_check == "test":
             result["test_query"].append( query )

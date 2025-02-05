@@ -49,7 +49,7 @@ def main():
             result[year][k]["recovery"] = round( result[year][k]["recovery"], 2 )
 
     lib.write_recovery_csv( result,  name + ".csv" )
-    score = lib.recoveryScoreCheck( result )
+    score = lib.recovery_score_check( result )
     lib.recovery_data_upload( name, score, split_list )
     print( split_list )
     print( score )
