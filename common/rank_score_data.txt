@@ -129,7 +129,6 @@ odds
 one_popular_limb
 one_popular_odds
 one_rate
-pace_up
 passing_regression
 past_ave_last_horce_body
 past_ave_last_horce_body_devi

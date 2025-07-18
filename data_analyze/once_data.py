@@ -354,7 +354,7 @@ class OnceData:
             before_continue_not_three_rank = pd.before_continue_not_three_rank()
             diff_pace_time = pd.diff_pace_time()
             diff_pace_first_passing = pd.diff_pace_first_passing()
-            pace_up = pd.pace_up_check( self.race_data.data["up_pace_regressin"] )            
+            #pace_up = pd.pace_up_check( self.race_data.data["up_pace_regressin"] )            
             predict_netkeiba_deployment = lib.escapeValue
 
             for t in range( 0, len( self.race_data.data["predict_netkeiba_deployment"] ) ):
@@ -465,7 +465,7 @@ class OnceData:
             t_instance[data_name.before_continue_not_three_rank] = before_continue_not_three_rank
             t_instance[data_name.diff_pace_time] = diff_pace_time
             t_instance[data_name.diff_pace_first_passing] = diff_pace_first_passing
-            t_instance[data_name.pace_up] = pace_up
+            #t_instance[data_name.pace_up] = pace_up
             t_instance[data_name.high_level_score] = high_level_score
             t_instance[data_name.jockey_rank] = jockey_rank_score
             t_instance[data_name.jockey_year_rank] = jockey_year_rank_score
