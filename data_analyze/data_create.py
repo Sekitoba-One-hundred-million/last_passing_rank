@@ -56,7 +56,8 @@ def main( update = False ):
             comm.send( True, dest = i, tag = 1 )
 
         result["simu"] = {}
-        result["data"] = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [], "horce_body": [] }
+        result["data"] = {}
+        #result["data"] = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [], "horce_body": [] }
         
         for i in range( 1, size ):
             file_name = comm.recv( source = i, tag = 2 )
@@ -64,6 +65,7 @@ def main( update = False ):
             result["simu"].update( instance["simu"] )
 
             for k in instance["data"].keys():
+                lib.dic_append( result["data"], k, [] )
                 result["data"][k].extend( instance["data"][k] )
 
         dm.pickle_upload( lib.name.data_name(), result["data"] )
@@ -76,10 +78,12 @@ def main( update = False ):
 
         if rank == 1:
             for k in tqdm( key_list ):
-                od.create( k )
+                for i in range( 0, lib.max_odds_index ):
+                    od.create( k, i )
         else:
             for k in key_list:
-                od.create( k )
+                for i in range( 0, lib.max_odds_index ):
+                    od.create( k, i )
 
         file_name = str( rank ) + "-instance.pickle"
         dm.pickle_upload( file_name, { "data": od.result, "simu": od.simu_data } )

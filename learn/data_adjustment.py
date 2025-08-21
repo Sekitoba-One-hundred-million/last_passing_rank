@@ -41,61 +41,62 @@ def score_check( simu_data, modelList, score_years = lib.test_years, upload = Fa
     score = 0
     count = 0
     simu_predict_data = {}
-    predict_use_data = []
+    predict_use_data = [[] for _ in range(lib.max_odds_index)]
 
     for race_id in simu_data.keys():
         for horce_id in simu_data[race_id].keys():
-            predict_use_data.append( simu_data[race_id][horce_id]["data"] )
+            for i in range( 0, lib.max_odds_index ):
+                predict_use_data[i].append( simu_data[race_id][horce_id][i]["data"] )
 
     c = 0
-    predict_data = []
-
-    for model in modelList:
-        predict_data.append( model.predict( np.array( predict_use_data ) ) )
+    predict_data = [[] for _ in range(lib.max_odds_index)]
+    
+    for i in range( 0, lib.max_odds_index ):
+        for model in modelList:
+            predict_data[i].append( model.predict( np.array( predict_use_data[i] ) ) )
 
     for race_id in simu_data.keys():
         year = race_id[0:4]
         race_place_num = race_id[4:6]
-        check_data = []
-        stand_score_list = []
+        check_data = [[] for _ in range(lib.max_odds_index)]
+        stand_score_list = [[] for _ in range(lib.max_odds_index)]
         simu_predict_data[race_id] = {}
         all_horce_num = len( simu_data[race_id] )
 
         for horce_id in simu_data[race_id].keys():
-            predict_score = 0
+            simu_predict_data[race_id][horce_id] = [{} for _ in range(lib.max_odds_index)]
+            # odds_index roop
+            for i in range( 0, lib.max_odds_index ):
+                predict_score = 0
 
-            for i in range( 0, len( predict_data ) ):
-                predict_score += predict_data[i][c]
+                for r in range( 0, len( predict_data[i] ) ):
+                    predict_score += predict_data[i][r][c]
 
-            predict_score /= len( predict_data )
+                predict_score /= len( modelList )
+                predict_first_passing_rank = simu_data[race_id][horce_id][i]["answer"]["predict_first_passing_rank"]
+                predict_score = min( predict_score + predict_first_passing_rank, all_horce_num )
+                answer_rank = simu_data[race_id][horce_id][i]["answer"]["last_passing_rank"]
+                check_data[i].append( { "horce_id": horce_id, "answer": answer_rank, "score": predict_score } )
+                stand_score_list[i].append( predict_score )
+
             c += 1
-            predict_score += simu_data[race_id][horce_id]["answer"]["predict_first_passing_rank"]
-            answer_rank = simu_data[race_id][horce_id]["answer"]["last_passing_rank"]
-            check_data.append( { "horce_id": horce_id, "answer": answer_rank, "score": predict_score } )
-            stand_score_list.append( predict_score )
 
-        stand_score_list = lib.standardization( stand_score_list )
-        check_data = sorted( check_data, key = lambda x: x["score"] )
-        before_score = 1
-        next_rank = 1
-        continue_count = 1
+            for i in range( 0, lib.max_odds_index ):
+                stand_score_list[i] = lib.standardization( stand_score_list[i] )
+                check_data[i] = sorted( check_data[i], key = lambda x: x["score"] )
 
-        for i in range( 0, len( check_data ) ):
-            predict_score = -1
-            current_score = int( check_data[i]["score"] + 0.5 )
-            check_answer = check_data[i]["answer"]
-            before_score = current_score
-            simu_predict_data[race_id][check_data[i]["horce_id"]] = {}
-            simu_predict_data[race_id][check_data[i]["horce_id"]]["index"] = i + 1
-            simu_predict_data[race_id][check_data[i]["horce_id"]]["score"] = check_data[i]["score"]
-            simu_predict_data[race_id][check_data[i]["horce_id"]]["stand"] = stand_score_list[i]
+                for r in range( 0, len( check_data[i] ) ):
+                    check_answer = check_data[i][r]["answer"]
+                    horce_id = check_data[i][r]["horce_id"]
+                    simu_predict_data[race_id][horce_id][i]["index"] = i + 1
+                    simu_predict_data[race_id][horce_id][i]["score"] = int( min( max( check_data[i][r]["score"], 1 ), len( check_data[i] ) ) )
+                    simu_predict_data[race_id][horce_id][i]["stand"] = stand_score_list[i][r]
 
-            if year in score_years and not int( race_place_num ) == 8:
-                score += math.pow( max( int( check_data[i]["score"] + 0.5 ), 1 ) - check_answer, 2 )
-                count += 1
+                    if year in score_years:
+                        score += abs( simu_predict_data[race_id][horce_id][i]["score"] - check_answer )
+                        count += 1
 
     score /= count
-    score = math.sqrt( score )
     print( "score: {}".format( score ) )
 
     if upload:

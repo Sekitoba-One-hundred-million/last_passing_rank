@@ -41,7 +41,7 @@ class OnceData:
         self.data_name_list = []
         self.write_data_list = []
         self.simu_data = {}
-        self.result = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [], "horce_body": [] }
+        self.result = { "answer": [], "teacher": [], "query": [], "year": [], "level": [], "diff": [], "horce_body": [], "odds_index": [] }
         self.data_name_read()
 
     def data_name_read( self ):
@@ -63,32 +63,19 @@ class OnceData:
         result = []
         write_instance = []
         
-        for data_name in self.data_name_list:
-            try:
-                result.append( round( data_dict[data_name], 3 ) )
-                write_instance.append( data_name )
-            except:
-                continue
+        for data_name in data_dict.keys():
+            result.append( round( data_dict[data_name], 3 ) )
+            write_instance.append( data_name )
 
         if len( self.write_data_list ) == 0:
             self.write_data_list = copy.deepcopy( write_instance )
 
         return result
 
-    def division( self, score, d ):
-        if score < 0:
-            score *= -1
-            score /= d
-            score *= -1
-        else:
-            score /= d
-
-        return int( score )
-
     def clear( self ):
         dm.dl.data_clear()
     
-    def create( self, race_id ):
+    def create( self, race_id, odds_index ):
         self.race_data.get_all_data( race_id )
         self.race_horce_data.get_all_data( race_id )
 
@@ -153,6 +140,8 @@ class OnceData:
             if not cd.race_check():
                 continue
 
+            cd.setting_odds( self.race_data.data["dev_odds_popular"][odds_index][horce_id]["odds"] )
+            cd.setting_popular( self.race_data.data["dev_odds_popular"][odds_index][horce_id]["popular"] )
             getHorceData = GetHorceData( cd, pd )
             getHorceDataDict[horce_id] = getHorceData
 
@@ -295,6 +284,8 @@ class OnceData:
             if not cd.race_check():
                 continue
 
+            cd.setting_odds( self.race_data.data["dev_odds_popular"][odds_index][horce_id]["odds"] )
+            cd.setting_popular( self.race_data.data["dev_odds_popular"][odds_index][horce_id]["popular"] )
             getHorceData = getHorceDataDict[horce_id]
             first_passing_rank, last_passing_rank = getHorceData.getCurrentPassingRank()
 
@@ -322,9 +313,9 @@ class OnceData:
             predict_first_passing_rank_index = lib.escapeValue
             
             if race_id in self.predict_first_passing_rank and horce_id in self.predict_first_passing_rank[race_id]:
-                predict_first_passing_rank = self.predict_first_passing_rank[race_id][horce_id]["score"]
-                predict_first_passing_rank_index = self.predict_first_passing_rank[race_id][horce_id]["index"]
-                predict_first_passing_rank_stand = self.predict_first_passing_rank[race_id][horce_id]["stand"]
+                predict_first_passing_rank = self.predict_first_passing_rank[race_id][horce_id][odds_index]["score"]
+                predict_first_passing_rank_index = self.predict_first_passing_rank[race_id][horce_id][odds_index]["index"]
+                predict_first_passing_rank_stand = self.predict_first_passing_rank[race_id][horce_id][odds_index]["stand"]
 
             high_level_score = self.race_high_level.data_get( cd, pd, ymd )
             weight_score = getHorceData.getWeightScore()
@@ -480,19 +471,19 @@ class OnceData:
             t_instance[data_name.speed_index_stand] = current_race_data[data_name.speed_index_stand][count]
             t_instance[data_name.predict_netkeiba_pace] = predict_netkeiba_pace
             t_instance[data_name.predict_netkeiba_deployment] = predict_netkeiba_deployment
-            t_instance.update( getHorceData.getPredictPace( predict_pace ) )
+            t_instance.update( getHorceData.getPredictPace( predict_pace, odds_index ) )
             t_instance.update( lib.horce_teacher_analyze( current_race_data, t_instance, count ) )
 
             t_list = self.data_list_create( t_instance )
             lib.dic_append( self.simu_data, race_id, {} )
-            self.simu_data[race_id][horce_id] = {}
-            self.simu_data[race_id][horce_id]["data"] = t_list
-            self.simu_data[race_id][horce_id]["answer"] = { "last_passing_rank": last_passing_rank,
-                                                           "first_passing_rank": first_passing_rank,
-                                                           "predict_first_passing_rank": predict_first_passing_rank,
-                                                           "odds": cd.odds(),
-                                                           "popular": cd.popular(),
-                                                           "horce_num": cd.horce_number() }
+            lib.dic_append( self.simu_data[race_id], horce_id, [{} for _ in range(lib.max_odds_index)] )
+            self.simu_data[race_id][horce_id][odds_index]["data"] = t_list
+            self.simu_data[race_id][horce_id][odds_index]["answer"] = { "last_passing_rank": last_passing_rank,
+                                                                        "first_passing_rank": first_passing_rank,
+                                                                        "predict_first_passing_rank": predict_first_passing_rank,
+                                                                        "odds": cd.odds(),
+                                                                        "popular": cd.popular(),
+                                                                        "horce_num": cd.horce_number() }
 
             answer_horce_body.append( answer_corner_horce_body )
             answer_data.append( last_passing_rank - first_passing_rank )
@@ -504,3 +495,4 @@ class OnceData:
             self.result["year"].append( year )
             self.result["horce_body"].append( answer_horce_body )
             self.result["query"].append( { "q": len( answer_data ), "year": year } )
+            self.result["odds_index"].append( odds_index )

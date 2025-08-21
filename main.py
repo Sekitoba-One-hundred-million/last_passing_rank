@@ -54,13 +54,13 @@ def main():
         learn_data = data["data"]
         remove_list = data_score_read()
 
-        for k in simu_data.keys():
-            for kk in simu_data[k].keys():
-                simu_data[k][kk]["data"] = data_remove( simu_data[k][kk]["data"], remove_list )
+        #for k in simu_data.keys():
+        #    for kk in simu_data[k].keys():
+        #        simu_data[k][kk]["data"] = data_remove( simu_data[k][kk]["data"], remove_list )
 
-        for i in range( 0, len( learn_data["teacher"] ) ):
-            for r in range( 0, len( learn_data["teacher"][i] ) ):
-                learn_data["teacher"][i][r] = data_remove( learn_data["teacher"][i][r], remove_list )
+        #for i in range( 0, len( learn_data["teacher"] ) ):
+        #    for r in range( 0, len( learn_data["teacher"][i] ) ):
+        #        learn_data["teacher"][i][r] = data_remove( learn_data["teacher"][i][r], remove_list )
 
         if l_check:
             learn.main( learn_data, simu_data, state = s_check )
