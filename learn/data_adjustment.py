@@ -88,7 +88,7 @@ def score_check( simu_data, modelList, score_years = lib.test_years, upload = Fa
                 for r in range( 0, len( check_data[i] ) ):
                     check_answer = check_data[i][r]["answer"]
                     horce_id = check_data[i][r]["horce_id"]
-                    simu_predict_data[race_id][horce_id][i]["index"] = i + 1
+                    simu_predict_data[race_id][horce_id][i]["index"] = r + 1
                     simu_predict_data[race_id][horce_id][i]["score"] = int( min( max( check_data[i][r]["score"], 1 ), len( check_data[i] ) ) )
                     simu_predict_data[race_id][horce_id][i]["stand"] = stand_score_list[i][r]
 
